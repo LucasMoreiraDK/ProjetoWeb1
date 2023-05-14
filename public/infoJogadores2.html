@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <title>Projeto Informações Futebol - WEB I</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <title>Consulta de Times de Futebol</title>
+  <script>
+    const API_KEY = 'a285aaa0a0msh426d100b97a8342p1db676jsnfbb112f85057';
+    const BASE_URL = 'https://api-football-beta.p.rapidapi.com';
+    const options = {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-key': API_KEY,
+        'x-rapidapi-host': 'api-football-beta.p.rapidapi.com'
+      }
+    };
+
+    let armazen = null;
+
+    function buscarJogadores() {
+      const time = document.getElementById('time').value;
+      const season = document.getElementById('season').value;
+      if (time === '') {
+        alert('Por favor, digite o ID do time.');
+        return;
+      }
+      fetch(`${BASE_URL}/players?team=${time}&season=${season}`, options)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          const jogadores = data.response;
+          const listaJogadores = document.getElementById('listaJogadores');
+          listaJogadores.innerHTML = '';
+          armazen = jogadores; // armazena os jogadores na variável "armazen"
+          for (let jogador of jogadores) {
+            const item = document.createElement('li');
+            console.log(item);
+            item.textContent = `${jogador.player.name} (${jogador.position}) - Nacionalidade: ${jogador.nationality}, Idade: ${jogador.age}`;
+            listaJogadores.appendChild(item);
+          }
+        })
+        .catch(error => console.error(error));
+    }
+  </script>
+</head>
+<body>
+
+
+  
+
+<div class="jumbotron text-center">
+  <h1>Informações sobre times,jogos e jogadores </h1>
+  <p>Todas as informações que você precisa!</p> 
+</div>
+  
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>---</h3>
+      <h1>Consulta de Jogadores de Futebol</h1>
+      <p>Digite o ID do time:</p>
+      <input type="text" id="time">
+      <p>Digite a temporada(ano):</p>
+      <input type="text" id="season">
+      <br><br>
+      <button onclick="buscarJogadores()">Buscar Jogadores</button>
+      <br><br>
+      <ul id="listaJogadores"></ul>
+    </div>
+    <div class="col-sm-4">
+      <h3>---</h3>        
+      <a href="index.html">Informações de times</a>
+      <br>
+      <a href="Eventos2.html">Eventos e jogos</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

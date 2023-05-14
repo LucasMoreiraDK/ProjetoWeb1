@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <title>Projeto Informações Futebol - WEB I</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <title>Consulta de Times de Futebol</title>
+  <script>
+    const API_KEY = 'a285aaa0a0msh426d100b97a8342p1db676jsnfbb112f85057';
+    const BASE_URL = 'https://api-football-beta.p.rapidapi.com';
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-key': API_KEY,
+        'x-rapidapi-host': 'api-football-beta.p.rapidapi.com'
+      }
+    };
+
+    function buscarTimes() {
+        const league = document.getElementById('league').value;
+        const season = document.getElementById('season').value;
+        
+        fetch(`${BASE_URL}/teams?league=${league}&season=${season}`, options)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            const times = data.response;
+            const listaTimes = document.getElementById('listaTimes');
+            listaTimes.innerHTML = '';
+            for (let time of times) {
+              const item = document.createElement('li');
+              console.log(item);
+              item.textContent = `${time.team.name} (${time.team.country}) - Fundado em ${time.team.founded}  -   ID do time: ${time.team.id}`;
+              listaTimes.appendChild(item);
+            }
+          })
+          .catch(error => console.error(error));
+      }
+
+    function buscarInformacoes() {
+      const timeNome = document.getElementById('time').value;
+      const league = document.getElementById('league').value;
+      const season = document.getElementById('season').value;
+      
+      fetch(`${BASE_URL}/teams?league=${league}&season=${season}`, options)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          const times = data.response;
+          const time = times.find(t => t.team.name.toLowerCase() === timeNome.toLowerCase());
+          if (!time) {
+            alert('Time não encontrado!');
+            return;
+          }
+          const item = document.createElement('li');
+          item.innerHTML = `
+            <strong>${time.team.name}</strong> (${time.team.country})<br>
+            <img src="${time.team.logo}" alt="${time.team.name} logo"><br>
+            Fundado em: ${time.team.founded}<br>
+            ID: ${time.team.id}<br>
+            Código: ${time.team.code || 'N/A'}<br>
+            Nacional: ${time.team.national}<br>
+          `;
+          const listaTimes = document.getElementById('listaTimes');
+          listaTimes.innerHTML = '';
+          listaTimes.appendChild(item);
+        })
+        .catch(error => console.error(error));
+    }
+  </script>
+</head>
+<body>
+
+
+  
+
+<div class="jumbotron text-center">
+  <h1>Informações sobre times,jogos e jogadores </h1>
+  <p>Todas as informações que você precisa!</p> 
+</div>
+  
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>---</h3>
+      <h1>Consulta de Time especifico(Somente o nome do time)</h1>
+      <p>Escolha a liga e a temporada:</p>
+      <label for="league">Liga:</label>
+      <select id="league">
+        <option value="39">Premier League</option>
+        <option value="78">Ligue 1</option>
+        <option value="135">Bundesliga</option>
+        <option value="140">Serie A</option>
+        <option value="195">La Liga</option>
+      </select>
+      <br><br>
+      <label for="season">Temporada:</label>
+      <input type="text" id="season" value="2021">
+      <br><br>
+      <label for="time">Time:</label>
+      <input type="text" id="time">
+      <br><br>
+      <button onclick="buscarInformacoes()">Buscar Informações</button>
+      <br><br>
+      <ul id="listaTimes"></ul>
+    </div>
+    <div class="col-sm-4">
+      <h3>---</h3>
+      <h1>Consulta de Times</h1>
+      <p>Escolha a liga e a temporada e veja os times:</p>
+      <label for="league">Liga:</label>
+      <select id="league">
+        <option value="39">Premier League</option>
+        <option value="78">Ligue 1</option>
+        <option value="135">Bundesliga</option>
+        <option value="140">Serie A</option>
+        <option value="195">La Liga</option>
+      </select>
+      <br><br>
+      <label for="season">Temporada:</label>
+      <input type="text" id="season" value="2019">
+      <br><br>
+      <button onclick="buscarTimes()">Buscar Times</button>
+      <br><br>
+      <ul id="listaTimes"></ul>
+    </div>
+    <div class="col-sm-4">
+      <h3>---</h3>        
+      <a href="infoJogadores2.html">Informações de jogadores</a>
+      <br>
+      <a href="Eventos2.html">Eventos e jogos</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

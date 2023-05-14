@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <title>Projeto Informações Futebol - WEB I</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <script>
+        const API_KEY = "a285aaa0a0msh426d100b97a8342p1db676jsnfbb112f85057";
+        const API_ENDPOINT = `https://v3.football.api-sports.io/fixtures?date=`;
+    
+        function buscar() {
+          const dateInput = document.getElementById("dateInput");
+          const resultsDiv = document.getElementById("results");
+    
+          const dateValue = dateInput.value;
+          if (!dateValue) {
+            alert("Por favor, escolha uma data.");
+            return;
+          }
+    
+          const url = `${API_ENDPOINT}${dateValue}`;
+          fetch(url, {
+            headers: {
+              "x-rapidapi-host": "v3.football.api-sports.io",
+              "x-rapidapi-key": API_KEY,
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              resultsDiv.innerHTML = "";
+              const fixtures = data.response;
+              if (fixtures.length === 0) {
+                resultsDiv.innerHTML = "Não há jogos marcados para esta data.";
+                return;
+              }
+              const ul = document.createElement("ul");
+              fixtures.forEach((fixture) => {
+                const li = document.createElement("li");
+                li.innerHTML = `<strong>${fixture.fixture.status.short}</strong> ${fixture.teams.home.name} vs. ${fixture.teams.away.name}`;
+                ul.appendChild(li);
+              });
+              resultsDiv.appendChild(ul);
+            })
+            .catch((error) => {
+              console.log(error);
+              resultsDiv.innerHTML = "Ocorreu um erro ao buscar os jogos.";
+            });
+        }
+      </script>
+  
+
+<div class="jumbotron text-center">
+  <h1>Informações sobre times,jogos e jogadores </h1>
+  <p>Todas as informações que você precisa!</p> 
+</div>
+  
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+        <h1>Jogos de futebol em uma data específica</h1>
+        <label for="dateInput">Escolha uma data:</label>
+        <input type="date" id="dateInput">
+        <button id="submitBtn" onclick="buscar()">Buscar</button>
+        <div id="results"></div>
+    </div>
+    <div class="col-sm-4">
+      <h3>Column 3</h3>        
+      <h3>---</h3>        
+      <a href="index.html">Informações de times</a>
+      <br>
+      <a href="infoJogadores2.html">Informações dos jogadores</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
