@@ -7,14 +7,106 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <title>Consulta de Times de Futebol</title>
+  <style>
+    body {
+      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+    }
+
+    .jumbotron {
+      background-color: #337ab7;
+      padding: 30px;
+      margin-bottom: 30px;
+      color: #fff;
+      border-radius: 0;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-top: 0;
+    }
+
+    .container {
+      margin-top: 30px;
+    }
+
+    h3 {
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    .col-sm-4 {
+      margin-bottom: 30px;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .panel {
+      border-radius: 0;
+    }
+
+    .panel-heading {
+      background-color: #337ab7;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .panel-title {
+      margin-top: 0;
+      margin-bottom: 0;
+      font-size: 24px;
+    }
+
+    .panel-body {
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      display: block;
+      margin: 0 auto;
+    }
+
+    ul {
+      padding-left: 0;
+      margin-top: 0;
+    }
+
+    li {
+      list-style: none;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .player-image {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .player-name {
+      margin-right: 10px;
+    }
+  </style>
   <script>
-    const API_KEY = 'a285aaa0a0msh426d100b97a8342p1db676jsnfbb112f85057';
+    const API_FOOTBALL_KEY = '6a3c6a2a19msh03e5da18fb9bd78p17e0bejsn01c39e64bb0c';
     const BASE_URL = 'https://api-football-beta.p.rapidapi.com';
     const options = {
       method: 'GET',
       headers: {
-        'x-rapidapi-key': API_KEY,
+        'x-rapidapi-key': API_FOOTBALL_KEY,
         'x-rapidapi-host': 'api-football-beta.p.rapidapi.com'
       }
     };
@@ -38,8 +130,18 @@
           armazen = jogadores; // armazena os jogadores na variável "armazen"
           for (let jogador of jogadores) {
             const item = document.createElement('li');
-            console.log(item);
-            item.textContent = `${jogador.player.name} (${jogador.position}) - Nacionalidade: ${jogador.nationality}, Idade: ${jogador.age}`;
+            item.classList.add('player-item');
+
+            const playerImage = document.createElement('img');
+            playerImage.classList.add('player-image');
+            playerImage.src = jogador.player.photo;
+
+            const playerName = document.createElement('span');
+            playerName.classList.add('player-name');
+            playerName.textContent = `${jogador.player.name} (${jogador.position}) - Nacionalidade: ${jogador.nationality}, Idade: ${jogador.age}`;
+
+            item.appendChild(playerImage);
+            item.appendChild(playerName);
             listaJogadores.appendChild(item);
           }
         })
@@ -48,37 +150,47 @@
   </script>
 </head>
 <body>
-
-
-  
-
-<div class="jumbotron text-center">
-  <h1>Informações sobre times,jogos e jogadores </h1>
-  <p>Todas as informações que você precisa!</p> 
-</div>
-  
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4">
-      <h3>---</h3>
-      <h1>Consulta de Jogadores de Futebol</h1>
-      <p>Digite o ID do time(Ex:. 49):</p>
-      <input type="text" id="time">
-      <p>Digite a temporada(ano):</p>
-      <input type="text" id="season">
-      <br><br>
-      <button onclick="buscarJogadores()">Buscar Jogadores</button>
-      <br><br>
-      <ul id="listaJogadores"></ul>
-    </div>
-    <div class="col-sm-4">
-      <h3>---</h3>        
-      <a href="index.html">Informações de times</a>
-      <br>
-      <a href="Eventos2.html">Eventos e jogos</a>
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Informações sobre times, jogos e jogadores</h1>
+      <p>Todas as informações que você precisa!</p>
     </div>
   </div>
-</div>
 
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">Consulta de Jogadores de Futebol</h2>
+          </div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label for="time">Digite o ID do time (Ex:. 49):</label>
+              <input type="text" id="time" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="season">Digite a Temporada (ano):</label>
+              <input type="text" id="season" class="form-control">
+            </div>
+            <button class="btn btn-primary" onclick="buscarJogadores()">Buscar Jogadores</button>
+            <hr>
+            <ul id="listaJogadores"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">Navegação</h2>
+          </div>
+          <div class="panel-body">
+            <a href="index.html" class="btn btn-default btn-block">Informações de times</a>
+            <a href="Eventos2.html" class="btn btn-default btn-block">Eventos e jogos</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

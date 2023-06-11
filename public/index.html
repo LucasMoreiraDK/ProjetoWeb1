@@ -7,9 +7,99 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <title>Consulta de Times de Futebol</title>
+  <style>
+    body {
+      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+    }
+
+    .jumbotron {
+      background-color: #337ab7;
+      color: #fff;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .jumbotron h1 {
+      font-size: 36px;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h3 {
+      font-size: 24px;
+      margin-top: 0;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #337ab7;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    ul li {
+      margin-bottom: 10px;
+    }
+
+    ul li strong {
+      font-weight: bold;
+    }
+
+    ul li img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .panel {
+      border-radius: 0;
+    }
+
+    .panel-heading {
+      background-color: #337ab7;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .panel-title {
+      margin-top: 0;
+      margin-bottom: 0;
+      font-size: 24px;
+    }
+
+    .panel-body {
+      padding: 20px;
+    }
+  </style>
   <script>
-    const API_KEY = 'a285aaa0a0msh426d100b97a8342p1db676jsnfbb112f85057';
+    const API_KEY = '6a3c6a2a19msh03e5da18fb9bd78p17e0bejsn01c39e64bb0c';
     const BASE_URL = 'https://api-football-beta.p.rapidapi.com';
 
     const options = {
@@ -21,31 +111,30 @@
     };
 
     function buscarTimes() {
-        const league = document.getElementById('league').value;
-        const season = document.getElementById('season').value;
-        
-        fetch(`${BASE_URL}/teams?league=${league}&season=${season}`, options)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data);
-            const times = data.response;
-            const listaTimes = document.getElementById('listaTimes');
-            listaTimes.innerHTML = '';
-            for (let time of times) {
-              const item = document.createElement('li');
-              console.log(item);
-              item.textContent = `${time.team.name} (${time.team.country}) - Fundado em ${time.team.founded}  -   ID do time: ${time.team.id}`;
-              listaTimes.appendChild(item);
-            }
-          })
-          .catch(error => console.error(error));
-      }
+      const league = document.getElementById('leagueTeams').value;
+      const season = document.getElementById('seasonTeams').value;
+
+      fetch(`${BASE_URL}/teams?league=${league}&season=${season}`, options)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          const times = data.response;
+          const listaTimes = document.getElementById('listaTimesTeams');
+          listaTimes.innerHTML = '';
+          for (let time of times) {
+            const item = document.createElement('li');
+            item.textContent = `${time.team.name} (${time.team.country}) - Fundado em ${time.team.founded} - ID do time: ${time.team.id}`;
+            listaTimes.appendChild(item);
+          }
+        })
+        .catch(error => console.error(error));
+    }
 
     function buscarInformacoes() {
       const timeNome = document.getElementById('time').value;
-      const league = document.getElementById('league').value;
-      const season = document.getElementById('season').value;
-      
+      const league = document.getElementById('leagueInfo').value;
+      const season = document.getElementById('seasonInfo').value;
+
       fetch(`${BASE_URL}/teams?league=${league}&season=${season}`, options)
         .then(response => response.json())
         .then(data => {
@@ -65,7 +154,7 @@
             Código: ${time.team.code || 'N/A'}<br>
             Nacional: ${time.team.national}<br>
           `;
-          const listaTimes = document.getElementById('listaTimes');
+          const listaTimes = document.getElementById('listaTimesInfo');
           listaTimes.innerHTML = '';
           listaTimes.appendChild(item);
         })
@@ -74,68 +163,78 @@
   </script>
 </head>
 <body>
-
-
+  <div class="jumbotron text-center">
+    <h1>Informações sobre times, jogos e jogadores</h1>
+    <p>Todas as informações que você precisa!</p> 
+  </div>
   
-
-<div class="jumbotron text-center">
-  <h1>Informações sobre times,jogos e jogadores </h1>
-  <p>Todas as informações que você precisa!</p> 
-</div>
-  
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4">
-      <h3>---</h3>
-      <h1>Consulta de Time especifico(Somente o nome do time)</h1>
-      <p>Escolha a liga e a temporada:</p>
-      <label for="league">Liga:</label>
-      <select id="league">
-        <option value="39">Premier League</option>
-        <option value="78">Ligue 1</option>
-        <option value="135">Bundesliga</option>
-        <option value="140">Serie A</option>
-        <option value="195">La Liga</option>
-      </select>
-      <br><br>
-      <label for="season">Temporada:</label>
-      <input type="text" id="season" value="2021">
-      <br><br>
-      <label for="time">Time(Ex:. Chelsea):</label>
-      <input type="text" id="time">
-      <br><br>
-      <button onclick="buscarInformacoes()">Buscar Informações</button>
-      <br><br>
-      <ul id="listaTimes"></ul>
-    </div>
-    <div class="col-sm-4">
-      <h3>---</h3>
-      <h1>Consulta de Times</h1>
-      <p>Escolha a liga e a temporada e veja os times:</p>
-      <label for="league">Liga:</label>
-      <select id="league">
-        <option value="39">Premier League</option>
-        <option value="78">Ligue 1</option>
-        <option value="135">Bundesliga</option>
-        <option value="140">Serie A</option>
-        <option value="195">La Liga</option>
-      </select>
-      <br><br>
-      <label for="season">Temporada:</label>
-      <input type="text" id="season" value="2019">
-      <br><br>
-      <button onclick="buscarTimes()">Buscar Times</button>
-      <br><br>
-      <ul id="listaTimes"></ul>
-    </div>
-    <div class="col-sm-4">
-      <h3>---</h3>        
-      <a href="infoJogadores2.html">Informações de jogadores</a>
-      <br>
-      <a href="Eventos2.html">Eventos e jogos</a>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="panel-title">Buscar Informações</h1>
+          </div>
+          <div class="panel-body">
+            <p>Escolha a liga e a temporada:</p>
+            <label for="leagueInfo">Liga:</label>
+            <select id="leagueInfo">
+              <option value="39">Premier League</option>
+              <option value="78">Ligue 1</option>
+              <option value="135">Bundesliga</option>
+              <option value="140">Serie A</option>
+              <option value="195">La Liga</option>
+            </select>
+            <br><br>
+            <label for="seasonInfo">Temporada:</label>
+            <input type="text" id="seasonInfo" value="2021">
+            <br><br>
+            <label for="time">Time:</label>
+            <input type="text" id="time">
+            <br><br>
+            <button onclick="buscarInformacoes()">Buscar Informações</button>
+            <br><br>
+            <ul id="listaTimesInfo"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="panel-title">Buscar Times</h1>
+          </div>
+          <div class="panel-body">
+            <p>Escolha a liga e a temporada e veja os times:</p>
+            <label for="leagueTeams">Liga:</label>
+            <select id="leagueTeams">
+              <option value="39">Premier League</option>
+              <option value="78">Ligue 1</option>
+              <option value="135">Bundesliga</option>
+              <option value="140">Serie A</option>
+              <option value="195">La Liga</option>
+            </select>
+            <br><br>
+            <label for="seasonTeams">Temporada:</label>
+            <input type="text" id="seasonTeams" value="2019">
+            <br><br>
+            <button onclick="buscarTimes()">Buscar Times</button>
+            <br><br>
+            <ul id="listaTimesTeams"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="panel-title">Navegação</h1>
+          </div>
+          <div class="panel-body">
+            <a href="infoJogadores2.html" class="btn btn-default btn-block">Informações de Jogadores</a>
+            <a href="Eventos2.html" class="btn btn-default btn-block">Eventos e Jogos</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
 </body>
 </html>
